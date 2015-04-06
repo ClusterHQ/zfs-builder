@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/smtp"
 	"os/exec"
+	"strings"
 )
 
 type Settings map[string]string
@@ -17,11 +18,25 @@ type Settings map[string]string
 func main() {
 	settings := getSettings()
 	err, lines := runBuild()
+	kernel, channel := getBuildEnv()
 	if err != nil {
 		// This means the build command outputted a valid artifact.
 		// Upload it to github.
 	}
-	sendReport(settings, err, lines)
+	sendReport(settings, err, lines, kernel, channel)
+}
+
+func getBuildEnv() (string, string) {
+	kernelVersion, err := exec.Command("uname", "-r").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+	updateFile, err := ioutil.ReadFile("/etc/coreos/update.conf")
+	if err != nil {
+		log.Fatal(err)
+	}
+	coreOsChannel := strings.Split(strings.Split(string(updateFile), "\n")[0], "=")[1]
+	return string(kernelVersion), coreOsChannel
 }
 
 func runBuild() (error, []byte) {
@@ -65,7 +80,7 @@ func getSettings() Settings {
 }
 
 func sendReport(settings Settings, reportErr error,
-	buffer []byte, buildEnv string) {
+	buffer []byte, kernel string, channel string) {
 	var stringResult string
 	if reportErr != nil {
 		stringResult = "success"
@@ -81,14 +96,14 @@ func sendReport(settings Settings, reportErr error,
 		[]string{settings["email_to"]},
 		[]byte(fmt.Sprintf(`From: %s
 To: %s
-Subject: coreos result: %s on %s
+Subject: coreos result: %s on %s (CoreOS %s)
 
 Build results:
 
 %s`,
 			settings["email_from"],
 			settings["email_to"],
-			stringResult, buildEnv,
+			stringResult, kernel, channel,
 			buffer)))
 	if err != nil {
 		log.Fatal(err)
