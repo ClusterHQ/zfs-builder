@@ -83,9 +83,9 @@ func sendReport(settings Settings, reportErr error,
 	buffer []byte, kernel string, channel string) {
 	var stringResult string
 	if reportErr != nil {
-		stringResult = "success"
+		stringResult = fmt.Sprintf("failure: %v", reportErr)
 	} else {
-		stringResult = "failure"
+		stringResult = "success"
 	}
 	err := smtp.SendMail("smtp.gmail.com:587",
 		smtp.PlainAuth("",
