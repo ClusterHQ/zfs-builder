@@ -26,7 +26,7 @@ func main() {
 		sendReport(settings, err, []byte("Error from checkReleaseExists"), kernel, channel)
 		return
 	}
-	if !exists {
+	if exists {
 		sendReport(settings, nil, []byte("Build already exists, skipping..."), kernel, channel)
 		return
 	}
