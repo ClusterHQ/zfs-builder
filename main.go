@@ -94,7 +94,7 @@ func checkReleaseExists(operatingSystem string, channel string, kernel string) (
 	}
 	if resp.StatusCode == 200 {
 		return true, nil
-	} else if resp.StatusCode == 400 {
+	} else if resp.StatusCode == 404 {
 		return false, nil
 	} else {
 		return false, fmt.Errorf("unexpected status code %d", resp.StatusCode)
