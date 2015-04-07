@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"net/smtp"
 	"os"
 	"os/exec"
@@ -18,13 +19,86 @@ type Settings map[string]string
 
 func main() {
 	settings := getSettings()
-	err, lines := runBuild()
 	kernel, channel := getBuildEnv()
+	operatingSystem := "coreos"
+	exists, err := checkReleaseExists(operatingSystem, channel, kernel)
+	if err != nil {
+		sendReport(settings, err, []byte("Error from checkReleaseExists"), kernel, channel)
+		return
+	}
+	if !exists {
+		sendReport(settings, nil, []byte("Build already exists, skipping..."), kernel, channel)
+		return
+	}
+	// We got here so this is a new kernel version never seen before. Build it!
+	err, lines := runBuild()
 	if err != nil {
 		// This means the build command outputted a valid artifact.
 		// Upload it to github.
+		pushToGit(operatingSystem, channel, kernel)
 	}
 	sendReport(settings, err, lines, kernel, channel)
+}
+
+func pushToGit(operatingSystem string, channel string, kernel string) {
+	gentooDir := "/home/core/gentoo"
+	gitDir := "/home/core/zfs-binaries"
+	releaseFile := fmt.Sprintf("zfs-%s.tar.gz", kernel)
+	out, cmdErr := exec.Command("rm", "-rf", "zfs-binaries").CombinedOutput()
+	if cmdErr != nil {
+		log.Fatal(cmdErr, out)
+	}
+	out, cmdErr = exec.Command(
+		"git", "clone", "git@github.com:clusterhq/zfs-binaries").CombinedOutput()
+	if cmdErr != nil {
+		log.Fatal(cmdErr, out)
+	}
+	out, cmdErr = exec.Command(
+		"mkdir", "-p", fmt.Sprintf("%s/%s", gitDir, operatingSystem)).CombinedOutput()
+	if cmdErr != nil {
+		log.Fatal(cmdErr, out)
+	}
+	out, cmdErr = exec.Command(
+		"cp", fmt.Sprintf("%s/%s", gentooDir, releaseFile),
+		fmt.Sprintf("zfs-binaries/%s/", operatingSystem)).CombinedOutput()
+	if cmdErr != nil {
+		log.Fatal(cmdErr, out)
+	}
+	cmdErr = os.Chdir(gitDir)
+	if cmdErr != nil {
+		log.Fatal(cmdErr, out)
+	}
+	out, cmdErr = exec.Command("git", "add", releaseFile).CombinedOutput()
+	if cmdErr != nil {
+		log.Fatal(cmdErr, out)
+	}
+	out, cmdErr = exec.Command("git", "commit", "-m",
+		fmt.Sprintf("Automated build for kernel %s on %s %s.",
+			kernel, operatingSystem, channel)).CombinedOutput()
+	if cmdErr != nil {
+		log.Fatal(cmdErr, out)
+	}
+	out, cmdErr = exec.Command("git", "push").CombinedOutput()
+	if cmdErr != nil {
+		log.Fatal(cmdErr, out)
+	}
+}
+
+func checkReleaseExists(operatingSystem string, channel string, kernel string) (bool, error) {
+	// Check whether a release exists on GitHub... returns true/false, or an
+	// error.
+	url := "https://raw.githubusercontent.com/ClusterHQ/zfs-binaries/master"
+	resp, err := http.Head(fmt.Sprintf("%s/%s/zfs-%s.tar.gz", url, operatingSystem, kernel))
+	if err != nil {
+		return false, err
+	}
+	if resp.StatusCode == 200 {
+		return true, nil
+	} else if resp.StatusCode == 400 {
+		return false, nil
+	} else {
+		return false, fmt.Errorf("unexpected status code %d", resp.StatusCode)
+	}
 }
 
 func getBuildEnv() (string, string) {
@@ -80,8 +154,7 @@ func getSettings() Settings {
 	return settings
 }
 
-func sendReport(settings Settings, reportErr error,
-	buffer []byte, kernel string, channel string) {
+func sendReport(settings Settings, reportErr error, buffer []byte, kernel string, channel string) {
 	var stringResult string
 	if reportErr != nil {
 		stringResult = fmt.Sprintf("failure: %v", reportErr)
