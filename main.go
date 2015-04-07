@@ -32,7 +32,7 @@ func main() {
 	}
 	// We got here so this is a new kernel version never seen before. Build it!
 	err, lines := runBuild()
-	if err != nil {
+	if err == nil {
 		// This means the build command outputted a valid artifact.
 		// Upload it to github.
 		pushToGit(operatingSystem, channel, kernel)
