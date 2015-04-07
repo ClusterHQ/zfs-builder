@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/smtp"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -43,7 +44,7 @@ func runBuild() (error, []byte) {
 	var buffer bytes.Buffer
 	var result []byte
 
-	cmd := exec.Command("sh", "-c", "./build.sh")
+	cmd := exec.Command(os.Args[1], os.Args[2:]...)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		log.Fatal(err)
