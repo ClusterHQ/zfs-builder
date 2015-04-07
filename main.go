@@ -46,41 +46,41 @@ func pushToGit(operatingSystem string, channel string, kernel string) {
 	releaseFile := fmt.Sprintf("zfs-%s.tar.gz", kernel)
 	out, cmdErr := exec.Command("rm", "-rf", "zfs-binaries").CombinedOutput()
 	if cmdErr != nil {
-		log.Fatal(cmdErr, out)
+		log.Fatal(cmdErr, string(out))
 	}
 	out, cmdErr = exec.Command(
 		"git", "clone", "git@github.com:clusterhq/zfs-binaries").CombinedOutput()
 	if cmdErr != nil {
-		log.Fatal(cmdErr, out)
+		log.Fatal(cmdErr, string(out))
 	}
 	out, cmdErr = exec.Command(
 		"mkdir", "-p", fmt.Sprintf("%s/%s", gitDir, operatingSystem)).CombinedOutput()
 	if cmdErr != nil {
-		log.Fatal(cmdErr, out)
+		log.Fatal(cmdErr, string(out))
 	}
 	out, cmdErr = exec.Command(
 		"cp", fmt.Sprintf("%s/%s", gentooDir, releaseFile),
 		fmt.Sprintf("zfs-binaries/%s/", operatingSystem)).CombinedOutput()
 	if cmdErr != nil {
-		log.Fatal(cmdErr, out)
+		log.Fatal(cmdErr, string(out))
 	}
 	cmdErr = os.Chdir(gitDir)
 	if cmdErr != nil {
-		log.Fatal(cmdErr, out)
+		log.Fatal(cmdErr, string(out))
 	}
 	out, cmdErr = exec.Command("git", "add", releaseFile).CombinedOutput()
 	if cmdErr != nil {
-		log.Fatal(cmdErr, out)
+		log.Fatal(cmdErr, string(out))
 	}
 	out, cmdErr = exec.Command("git", "commit", "-m",
 		fmt.Sprintf("Automated build for kernel %s on %s %s.",
 			kernel, operatingSystem, channel)).CombinedOutput()
 	if cmdErr != nil {
-		log.Fatal(cmdErr, out)
+		log.Fatal(cmdErr, string(out))
 	}
 	out, cmdErr = exec.Command("git", "push").CombinedOutput()
 	if cmdErr != nil {
-		log.Fatal(cmdErr, out)
+		log.Fatal(cmdErr, string(out))
 	}
 }
 
