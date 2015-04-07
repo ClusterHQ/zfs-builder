@@ -40,48 +40,33 @@ func main() {
 	sendReport(settings, err, lines, kernel, channel)
 }
 
+func logCommand(out []byte, cmdErr error) {
+	if cmdErr != nil {
+		log.Fatal(cmdErr, "\n\n", string(out))
+	}
+}
+
 func pushToGit(operatingSystem string, channel string, kernel string) {
 	gentooDir := "/home/core/gentoo"
 	gitDir := "/home/core/zfs-binaries"
 	releaseFile := fmt.Sprintf("zfs-%s.tar.gz", kernel)
-	out, cmdErr := exec.Command("rm", "-rf", "zfs-binaries").CombinedOutput()
-	if cmdErr != nil {
-		log.Fatal(cmdErr, string(out))
-	}
-	out, cmdErr = exec.Command(
-		"git", "clone", "git@github.com:clusterhq/zfs-binaries").CombinedOutput()
-	if cmdErr != nil {
-		log.Fatal(cmdErr, string(out))
-	}
-	out, cmdErr = exec.Command(
-		"mkdir", "-p", fmt.Sprintf("%s/%s", gitDir, operatingSystem)).CombinedOutput()
-	if cmdErr != nil {
-		log.Fatal(cmdErr, string(out))
-	}
-	out, cmdErr = exec.Command(
+	logCommand(exec.Command("rm", "-rf", "zfs-binaries").CombinedOutput())
+	logCommand(exec.Command(
+		"git", "clone", "git@github.com:clusterhq/zfs-binaries").CombinedOutput())
+	logCommand(exec.Command(
+		"mkdir", "-p", fmt.Sprintf("%s/%s", gitDir, operatingSystem)).CombinedOutput())
+	logCommand(exec.Command(
 		"cp", fmt.Sprintf("%s/%s", gentooDir, releaseFile),
-		fmt.Sprintf("zfs-binaries/%s/", operatingSystem)).CombinedOutput()
+		fmt.Sprintf("zfs-binaries/%s/", operatingSystem)).CombinedOutput())
+	cmdErr := os.Chdir(gitDir)
 	if cmdErr != nil {
-		log.Fatal(cmdErr, string(out))
+		log.Fatal(cmdErr)
 	}
-	cmdErr = os.Chdir(gitDir)
-	if cmdErr != nil {
-		log.Fatal(cmdErr, string(out))
-	}
-	out, cmdErr = exec.Command("git", "add", releaseFile).CombinedOutput()
-	if cmdErr != nil {
-		log.Fatal(cmdErr, string(out))
-	}
-	out, cmdErr = exec.Command("git", "commit", "-m",
+	logCommand(exec.Command("git", "add", releaseFile).CombinedOutput())
+	logCommand(exec.Command("git", "commit", "-m",
 		fmt.Sprintf("Automated build for kernel %s on %s %s.",
-			kernel, operatingSystem, channel)).CombinedOutput()
-	if cmdErr != nil {
-		log.Fatal(cmdErr, string(out))
-	}
-	out, cmdErr = exec.Command("git", "push").CombinedOutput()
-	if cmdErr != nil {
-		log.Fatal(cmdErr, string(out))
-	}
+			kernel, operatingSystem, channel)).CombinedOutput())
+	logCommand(exec.Command("git", "push").CombinedOutput())
 }
 
 func checkReleaseExists(operatingSystem string, channel string, kernel string) (bool, error) {
