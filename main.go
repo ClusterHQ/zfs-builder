@@ -86,7 +86,7 @@ func pushToGit(operatingSystem string, channel string, kernel string) {
 	if cmdErr != nil {
 		log.Fatal(cmdErr)
 	}
-	runCommand("git", "add", fmt.Sprintf("%s/%s", REPO_NAME, releaseFile))
+	runCommand("git", "add", fmt.Sprintf("%s/%s", operatingSystem, releaseFile))
 	runCommand("git", "commit", "-m",
 		fmt.Sprintf("Automated build for kernel %s on %s %s.",
 			kernel, operatingSystem, channel))
