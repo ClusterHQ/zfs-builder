@@ -21,13 +21,13 @@ const BASE_DIR string = "/home/core"
 const REPO_NAME string = "zfs-binaries"
 
 // permit offline operation, for testing
+/*
 const FAKE_NETWORK_SERVICES bool = true
 const DESTINATION_GIT_URL string = "/tmp/repo"
+*/
 
-/*
 const FAKE_NETWORK_SERVICES bool = false
 const DESTINATION_GIT_URL string = "git@github.com:clusterhq/zfs-binaries"
-*/
 
 func main() {
 	settings := getSettings()
