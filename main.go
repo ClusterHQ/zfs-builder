@@ -31,7 +31,7 @@ func main() {
 		return
 	}
 	// We got here so this is a new kernel version never seen before. Build it!
-	err, lines := runBuild()
+	lines, err := runBuild()
 	if err == nil {
 		// This means the build command outputted a valid artifact.
 		// Upload it to github.
@@ -99,7 +99,7 @@ func getBuildEnv() (string, string) {
 	return string(kernelVersion), coreOsChannel
 }
 
-func runBuild() (error, []byte) {
+func runBuild() ([]byte, error) {
 	var buffer bytes.Buffer
 	var result []byte
 
@@ -126,7 +126,7 @@ func runBuild() (error, []byte) {
 	}
 	err = cmd.Wait()
 	result = []byte(buffer.String())
-	return err, result
+	return result, err
 }
 
 func getSettings() Settings {
