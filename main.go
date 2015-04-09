@@ -17,11 +17,28 @@ import (
 
 type Settings map[string]string
 
+// permit offline operation, for testing
+const FAKE_NETWORK_SERVICES bool = true
+const DESTINATION_GIT_URL string = "/tmp/repo"
+
+/*
+const FAKE_NETWORK_SERVICES bool = false
+const DESTINATION_GIT_URL string = "git@github.com:clusterhq/zfs-binaries"
+*/
+
 func main() {
 	settings := getSettings()
 	kernel, channel := getBuildEnv()
 	operatingSystem := "coreos"
-	exists, err := checkReleaseExists(operatingSystem, channel, kernel)
+
+	var (
+		exists bool // defaults to false
+		err    error
+	)
+	// if faking network services, always build.
+	if !FAKE_NETWORK_SERVICES {
+		exists, err = checkReleaseExists(operatingSystem, channel, kernel)
+	}
 	if err != nil {
 		sendReport(settings, err, []byte("Error from checkReleaseExists"), kernel, channel)
 		return
@@ -53,7 +70,7 @@ func pushToGit(operatingSystem string, channel string, kernel string) {
 	gentooDir := "/home/core/gentoo"
 	gitDir := "/home/core/zfs-binaries"
 	releaseFile := fmt.Sprintf("zfs-%s.tar.gz", kernel)
-	runCommand("git", "clone", "git@github.com:clusterhq/zfs-binaries")
+	runCommand("git", "clone", DESTINATION_GIT_URL)
 	runCommand("mkdir", "-p", fmt.Sprintf("%s/%s", gitDir, operatingSystem))
 	runCommand("cp", fmt.Sprintf("%s/%s", gentooDir, releaseFile),
 		fmt.Sprintf("zfs-binaries/%s/", operatingSystem))
