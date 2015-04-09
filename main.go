@@ -42,7 +42,7 @@ func main() {
 
 func runCommand(cmds ...string) []byte {
 	log.Printf("Running command %s", strings.Join(cmds, " "))
-	out, cmdErr := exec.Command(cmds...).CombinedOutput()
+	out, cmdErr := exec.Command(cmds[0], cmds[1:]...).CombinedOutput()
 	if cmdErr != nil {
 		log.Fatal(cmdErr, "\n\n", string(out))
 	}
