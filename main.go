@@ -81,7 +81,7 @@ func pushToGit(operatingSystem string, channel string, kernel string) {
 	runCommand("mkdir", "-p", fmt.Sprintf("%s/%s", gitDir, operatingSystem))
 	runCommand("cp", fmt.Sprintf("%s/%s", BASE_DIR, releaseFile),
 		fmt.Sprintf("zfs-binaries/%s/", operatingSystem))
-	cmdErr := os.Chdir(gitDir)
+	cmdErr = os.Chdir(gitDir)
 	if cmdErr != nil {
 		log.Fatal(cmdErr)
 	}
