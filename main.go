@@ -18,6 +18,7 @@ import (
 type Settings map[string]string
 
 const BASE_DIR string = "/home/core"
+const REPO_NAME string = "zfs-binaries"
 
 // permit offline operation, for testing
 const FAKE_NETWORK_SERVICES bool = true
@@ -76,8 +77,8 @@ func pushToGit(operatingSystem string, channel string, kernel string) {
 	if cmdErr != nil {
 		log.Fatal(cmdErr)
 	}
-	runCommand("rm", "-rf", "zfs-binaries")
-	runCommand("git", "clone", DESTINATION_GIT_URL, "zfs-binaries")
+	runCommand("rm", "-rf", REPO_NAME)
+	runCommand("git", "clone", DESTINATION_GIT_URL, REPO_NAME)
 	runCommand("mkdir", "-p", fmt.Sprintf("%s/%s", gitDir, operatingSystem))
 	runCommand("cp", fmt.Sprintf("%s/%s", BASE_DIR, releaseFile),
 		fmt.Sprintf("zfs-binaries/%s/", operatingSystem))
