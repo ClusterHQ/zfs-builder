@@ -163,25 +163,31 @@ func sendReport(settings Settings, reportErr error, buffer []byte, kernel string
 	} else {
 		stringResult = "success"
 	}
-	err := smtp.SendMail("smtp.gmail.com:587",
-		smtp.PlainAuth("",
-			settings["gmail_smtp_username"],
-			settings["gmail_smtp_password"],
-			"smtp.gmail.com"),
-		settings["email_from"],
-		[]string{settings["email_to"]},
-		[]byte(fmt.Sprintf(`From: %s
+	emailBody := fmt.Sprintf(`From: %s
 To: %s
 Subject: coreos result: %s on %s (CoreOS %s)
 
 Build results:
 
 %s`,
+		settings["email_from"],
+		settings["email_to"],
+		stringResult, kernel, channel,
+		buffer)
+
+	if FAKE_NETWORK_SERVICES {
+		log.Printf("Would send email: %s", string(emailBody))
+	} else {
+		err := smtp.SendMail("smtp.gmail.com:587",
+			smtp.PlainAuth("",
+				settings["gmail_smtp_username"],
+				settings["gmail_smtp_password"],
+				"smtp.gmail.com"),
 			settings["email_from"],
-			settings["email_to"],
-			stringResult, kernel, channel,
-			buffer)))
-	if err != nil {
-		log.Fatal(err)
+			[]string{settings["email_to"]},
+			[]byte(emailBody))
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
