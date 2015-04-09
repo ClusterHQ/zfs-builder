@@ -42,7 +42,7 @@ func main() {
 
 func runCommand(cmds ...string) []byte {
 	log.Printf("Running command %s", strings.Join(cmds, " "))
-	out, cmdErr := exec.Command("rm", "-rf", "zfs-binaries").CombinedOutput()
+	out, cmdErr := exec.Command(cmds...).CombinedOutput()
 	if cmdErr != nil {
 		log.Fatal(cmdErr, "\n\n", string(out))
 	}
