@@ -70,7 +70,7 @@ func runCommand(cmds ...string) []byte {
 }
 
 func pushToGit(operatingSystem string, channel string, kernel string) {
-	gitDir := fmt.Sprintf("%s/zfs-binaries", BASE_DIR)
+	gitDir := fmt.Sprintf("%s/%s", BASE_DIR, REPO_NAME)
 	releaseFile := fmt.Sprintf("zfs-%s.tar.gz", kernel)
 
 	cmdErr := os.Chdir(BASE_DIR)
@@ -86,7 +86,7 @@ func pushToGit(operatingSystem string, channel string, kernel string) {
 	if cmdErr != nil {
 		log.Fatal(cmdErr)
 	}
-	runCommand("git", "add", releaseFile)
+	runCommand("git", "add", fmt.Sprintf("%s/%s", REPO_NAME, releaseFile))
 	runCommand("git", "commit", "-m",
 		fmt.Sprintf("Automated build for kernel %s on %s %s.",
 			kernel, operatingSystem, channel))
