@@ -67,12 +67,13 @@ func runCommand(cmds ...string) []byte {
 }
 
 func pushToGit(operatingSystem string, channel string, kernel string) {
+	coreDir := "/home/core"
 	gentooDir := "/home/core/gentoo"
 	gitDir := "/home/core/zfs-binaries"
 	releaseFile := fmt.Sprintf("zfs-%s.tar.gz", kernel)
 	runCommand("git", "clone", DESTINATION_GIT_URL)
 	runCommand("mkdir", "-p", fmt.Sprintf("%s/%s", gitDir, operatingSystem))
-	runCommand("cp", fmt.Sprintf("%s/%s", gentooDir, releaseFile),
+	runCommand("cp", fmt.Sprintf("%s/%s", coreDir, releaseFile),
 		fmt.Sprintf("zfs-binaries/%s/", operatingSystem))
 	cmdErr := os.Chdir(gitDir)
 	if cmdErr != nil {
