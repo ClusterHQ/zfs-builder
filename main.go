@@ -40,33 +40,32 @@ func main() {
 	sendReport(settings, err, lines, kernel, channel)
 }
 
-func logCommand(out []byte, cmdErr error) {
+func runCommand(cmds ...string) []byte {
+	log.Printf("Running command %s", strings.Join(cmds, " "))
+	out, cmdErr := exec.Command("rm", "-rf", "zfs-binaries").CombinedOutput()
 	if cmdErr != nil {
 		log.Fatal(cmdErr, "\n\n", string(out))
 	}
+	return out
 }
 
 func pushToGit(operatingSystem string, channel string, kernel string) {
 	gentooDir := "/home/core/gentoo"
 	gitDir := "/home/core/zfs-binaries"
 	releaseFile := fmt.Sprintf("zfs-%s.tar.gz", kernel)
-	logCommand(exec.Command("rm", "-rf", "zfs-binaries").CombinedOutput())
-	logCommand(exec.Command(
-		"git", "clone", "git@github.com:clusterhq/zfs-binaries").CombinedOutput())
-	logCommand(exec.Command(
-		"mkdir", "-p", fmt.Sprintf("%s/%s", gitDir, operatingSystem)).CombinedOutput())
-	logCommand(exec.Command(
-		"cp", fmt.Sprintf("%s/%s", gentooDir, releaseFile),
-		fmt.Sprintf("zfs-binaries/%s/", operatingSystem)).CombinedOutput())
+	runCommand("git", "clone", "git@github.com:clusterhq/zfs-binaries")
+	runCommand("mkdir", "-p", fmt.Sprintf("%s/%s", gitDir, operatingSystem))
+	runCommand("cp", fmt.Sprintf("%s/%s", gentooDir, releaseFile),
+		fmt.Sprintf("zfs-binaries/%s/", operatingSystem))
 	cmdErr := os.Chdir(gitDir)
 	if cmdErr != nil {
 		log.Fatal(cmdErr)
 	}
-	logCommand(exec.Command("git", "add", releaseFile).CombinedOutput())
-	logCommand(exec.Command("git", "commit", "-m",
+	runCommand("git", "add", releaseFile)
+	runCommand("git", "commit", "-m",
 		fmt.Sprintf("Automated build for kernel %s on %s %s.",
-			kernel, operatingSystem, channel)).CombinedOutput())
-	logCommand(exec.Command("git", "push").CombinedOutput())
+			kernel, operatingSystem, channel))
+	runCommand("git", "push")
 }
 
 func checkReleaseExists(operatingSystem string, channel string, kernel string) (bool, error) {
