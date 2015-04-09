@@ -87,6 +87,7 @@ func checkReleaseExists(operatingSystem string, channel string, kernel string) (
 
 func getBuildEnv() (string, string) {
 	kernelVersion, err := exec.Command("uname", "-r").Output()
+	kernelVersion = []byte(strings.TrimSpace(string(kernelVersion)))
 	if err != nil {
 		log.Fatal(err)
 	}
