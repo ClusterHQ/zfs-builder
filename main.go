@@ -143,7 +143,7 @@ func runBuild() ([]byte, error) {
 
 	in := io.MultiReader(stdout, stderr)
 
-	var b []byte
+	b := make([]byte, 1024)
 	for {
 		amount, err := in.Read(b)
 		log.Printf("read %d bytes", amount)
