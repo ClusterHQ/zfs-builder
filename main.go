@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"fmt"
 	"gopkg.in/yaml.v2"
@@ -142,12 +141,19 @@ func runBuild() ([]byte, error) {
 		log.Fatal(err)
 	}
 
-	in := bufio.NewScanner(io.MultiReader(stdout, stderr))
+	in := io.MultiReader(stdout, stderr)
 
-	for in.Scan() {
-		line := in.Text()
-		buffer.WriteString(line + "\n")
-		log.Printf(line)
+	var b []byte
+	for {
+		amount, err := in.Read(b)
+		log.Printf("read %d bytes", amount)
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			log.Fatalf("Problems reading from input: %s", err)
+		}
+		buffer.WriteString(string(b))
+		log.Printf(string(b))
 	}
 	err = cmd.Wait()
 	result = []byte(buffer.String())
