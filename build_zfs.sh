@@ -17,7 +17,9 @@ cd /zfs/zfs
 git checkout zfs-0.6.5.4
 
 cd /linux-kernel
-make tinyconfig
+make defconfig
+echo 'CONFIG_ZLIB_INFLATE=y' >> /linux-kernel/.config
+echo 'CONFIG_ZLIB_DEFLATE=y' >> /linux-kernel/.config
 make
 
 # Configure and compile SPL kernel module
