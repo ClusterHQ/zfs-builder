@@ -17,22 +17,22 @@ import (
 
 type Settings map[string]string
 
-const BASE_DIR string = "/home/core"
+const BASE_DIR string = "."
 const REPO_NAME string = "zfs-binaries"
 
 // permit offline operation, for testing
-/*
 const FAKE_NETWORK_SERVICES bool = true
 const DESTINATION_GIT_URL string = "/tmp/repo"
-*/
 
+/*
 const FAKE_NETWORK_SERVICES bool = false
 const DESTINATION_GIT_URL string = "git@github.com:clusterhq/zfs-binaries"
+*/
 
 func main() {
 	settings := getSettings()
 	kernel, channel := getBuildEnv()
-	operatingSystem := "coreos"
+	operatingSystem := settings["operating_system"]
 
 	var (
 		exists bool // defaults to false
@@ -118,7 +118,7 @@ func getBuildEnv() (string, string) {
 	}
 	updateFile, err := ioutil.ReadFile("/etc/coreos/update.conf")
 	if err != nil {
-		log.Fatal(err)
+		return string(kernelVersion), ""
 	}
 	coreOsChannel := strings.Split(strings.Split(string(updateFile), "\n")[0], "=")[1]
 	return string(kernelVersion), coreOsChannel
