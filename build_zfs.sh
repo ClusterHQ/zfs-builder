@@ -6,6 +6,8 @@
 # SPL=y
 # ZFS=y
 
+set -xe
+
 git clone https://github.com/zfsonlinux/spl.git /zfs/spl
 cd /zfs/spl
 git checkout spl-0.6.5.4

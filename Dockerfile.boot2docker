@@ -20,3 +20,7 @@ ENV KERNEL_VERSION  4.1.19
 # Fetch the kernel sources
 RUN curl --retry 10 https://www.kernel.org/pub/linux/kernel/v${KERNEL_VERSION%%.*}.x/linux-$KERNEL_VERSION.tar.xz | tar -C / -xJ && \
     mv /linux-$KERNEL_VERSION /linux-kernel
+
+RUN apt-get -y install shtool
+RUN apt-get -y install libtool
+ADD build_zfs.sh /
