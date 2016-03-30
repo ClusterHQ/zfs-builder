@@ -24,3 +24,5 @@ RUN curl --retry 10 https://www.kernel.org/pub/linux/kernel/v${KERNEL_VERSION%%.
 RUN apt-get -y install shtool
 RUN apt-get -y install libtool
 ADD build_zfs.sh /
+
+COPY kernel_config /linux-kernel/.config
