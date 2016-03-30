@@ -16,6 +16,9 @@ git clone https://github.com/zfsonlinux/zfs.git /zfs/zfs
 cd /zfs/zfs
 git checkout zfs-0.6.5.4
 
+cd /linux-kernel
+make prepare
+
 # Configure and compile SPL kernel module
 cd /zfs/spl
 ./autogen.sh

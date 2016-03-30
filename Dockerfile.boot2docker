@@ -23,6 +23,7 @@ RUN curl --retry 10 https://www.kernel.org/pub/linux/kernel/v${KERNEL_VERSION%%.
 
 RUN apt-get -y install shtool
 RUN apt-get -y install libtool
+RUN apt-get -y install build-essential gawk alien fakeroot zlib1g-dev uuid-dev libblkid-dev libselinux-dev parted lsscsi wget
 ADD build_zfs.sh /
 
 COPY kernel_config /linux-kernel/.config
