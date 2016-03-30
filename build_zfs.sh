@@ -27,7 +27,6 @@ cd /zfs/spl
     --libdir=/lib \
     --includedir=/usr/include \
     --datarootdir=/usr/share \
-    --enable-linux-builtin=yes \
     --with-linux=/linux-kernel \
     --with-linux-obj=/linux-kernel \
     --with-config=kernel
@@ -70,7 +69,6 @@ cd /zfs/zfs
     --libdir=/lib \
     --includedir=/usr/include \
     --datarootdir=/usr/share \
-    --enable-linux-builtin=yes \
     --with-linux=/linux-kernel \
     --with-linux-obj=/linux-kernel \
     --with-spl=/zfs/spl \
