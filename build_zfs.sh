@@ -20,7 +20,7 @@ cd /linux-kernel
 make defconfig
 echo 'CONFIG_ZLIB_INFLATE=y' >> /linux-kernel/.config
 echo 'CONFIG_ZLIB_DEFLATE=y' >> /linux-kernel/.config
-make
+make -j8
 
 # Configure and compile SPL kernel module
 cd /zfs/spl
