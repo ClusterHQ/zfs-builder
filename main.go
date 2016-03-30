@@ -173,7 +173,7 @@ func sendReport(settings Settings, reportErr error, buffer []byte, kernel string
 	}
 	emailBody := fmt.Sprintf(`From: %s
 To: %s
-Subject: coreos result: %s on %s (CoreOS %s)
+Subject: zfs builder result: %s on %s (%s)
 
 Build results:
 
