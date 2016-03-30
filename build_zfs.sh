@@ -17,7 +17,8 @@ cd /zfs/zfs
 git checkout zfs-0.6.5.4
 
 cd /linux-kernel
-make prepare
+make tinyconfig
+make
 
 # Configure and compile SPL kernel module
 cd /zfs/spl
@@ -30,7 +31,6 @@ cd /zfs/spl
     --with-linux=/linux-kernel \
     --with-linux-obj=/linux-kernel \
     --with-config=kernel
-./copy-builtin /linux-kernel
 
 # Configure and cross-compile SPL usermode utils
 ./configure \
@@ -61,7 +61,6 @@ cd /zfs/zfs
     --with-spl=/zfs/spl \
     --with-spl-obj=/zfs/spl \
     --with-config=kernel
-./copy-builtin /linux-kernel
 
 # Configure and cross-compile ZFS usermode utils
 ./configure \
