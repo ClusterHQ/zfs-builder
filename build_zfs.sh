@@ -40,13 +40,12 @@ cd /zfs/spl
     --libdir=/lib \
     --includedir=/usr/include \
     --datarootdir=/usr/share \
-    --enable-linux-builtin=yes \
     --with-linux=/linux-kernel \
     --with-linux-obj=/linux-kernel \
     --with-config=user \
     --build=x86_64-pc-linux-gnu \
     --host=x86_64-pc-linux-gnu
-make
+make -j8
 make install DESTDIR=/rootfs
 
 # Configure and compile ZFS kernel module
@@ -57,7 +56,6 @@ cd /zfs/zfs
     --libdir=/lib \
     --includedir=/usr/include \
     --datarootdir=/usr/share \
-    --enable-linux-builtin=yes \
     --with-linux=/linux-kernel \
     --with-linux-obj=/linux-kernel \
     --with-spl=/zfs/spl \
@@ -65,17 +63,18 @@ cd /zfs/zfs
     --with-config=kernel
 
 # Configure and cross-compile ZFS usermode utils
-./configure \
-    --prefix=/ \
-    --libdir=/lib \
-    --includedir=/usr/include \
-    --datarootdir=/usr/share \
-    --with-linux=/linux-kernel \
-    --with-linux-obj=/linux-kernel \
-    --with-spl=/zfs/spl \
-    --with-spl-obj=/zfs/spl \
-    --with-config=user \
-    --build=x86_64-pc-linux-gnu \
-    --host=x86_64-pc-linux-gnu
-make
+#./configure \
+#    --prefix=/ \
+#    --libdir=/lib \
+#    --includedir=/usr/include \
+#    --datarootdir=/usr/share \
+#    --with-linux=/linux-kernel \
+#    --with-linux-obj=/linux-kernel \
+#    --with-spl=/zfs/spl \
+#    --with-spl-obj=/zfs/spl \
+#    --with-config=user \
+#    --build=x86_64-pc-linux-gnu \
+#    --host=x86_64-pc-linux-gnu
+
+make -j8
 make install DESTDIR=/rootfs
