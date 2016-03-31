@@ -16,12 +16,6 @@ git clone https://github.com/zfsonlinux/zfs.git /zfs/zfs
 cd /zfs/zfs
 git checkout zfs-0.6.5.4
 
-cd /linux-kernel
-make defconfig
-echo 'CONFIG_ZLIB_INFLATE=y' >> /linux-kernel/.config
-echo 'CONFIG_CRYPTO_DEFLATE=y' >> /linux-kernel/.config
-make -j8
-
 # Configure and compile SPL kernel module
 cd /zfs/spl
 ./autogen.sh
