@@ -17,11 +17,9 @@ cd /zfs/zfs
 git checkout zfs-0.6.5.4
 
 cd /linux-kernel
-#make defconfig
-echo 'CONFIG_MODULES=y' >> /linux-kernel/all.config
-echo 'CONFIG_ZLIB_INFLATE=y' >> /linux-kernel/all.config
-echo 'CONFIG_CRYPTO_DEFLATE=y' >> /linux-kernel/all.config
-make allnoconfig
+make defconfig
+echo 'CONFIG_ZLIB_INFLATE=y' >> /linux-kernel/.config
+echo 'CONFIG_CRYPTO_DEFLATE=y' >> /linux-kernel/.config
 make -j8
 
 # Configure and compile SPL kernel module
