@@ -1,2 +1,2 @@
 script:
-  - uname -r
+ - uname -r
