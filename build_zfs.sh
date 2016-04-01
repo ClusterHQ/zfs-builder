@@ -71,8 +71,9 @@ cd /zfs/zfs
 #    --host=x86_64-pc-linux-gnu
 
 make -j8
+echo "Got after make $?"
 make install DESTDIR=/rootfs
+echo "Got after make install $?"
 
 cd /rootfs
 tar cfv zfs-$KERNEL_VERSION.tar.gz lib
-

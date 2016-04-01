@@ -12,11 +12,11 @@ function build {
 # https://github.com/boot2docker/boot2docker/releases
 
 build 4.0.9  1.8.2
-build 4.0.10 1.8.3
+#build 4.0.10 1.8.3
 
-build 4.1.12 1.9.0
-build 4.1.13 1.9.1
+#build 4.1.12 1.9.0
+#build 4.1.13 1.9.1
 
-build 4.1.17 1.10.1
-build 4.1.18 1.10.2
-build 4.1.19 1.10.3
+#build 4.1.17 1.10.1
+#build 4.1.18 1.10.2
+#build 4.1.19 1.10.3
