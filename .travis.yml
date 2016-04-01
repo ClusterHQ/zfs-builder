@@ -1,2 +1,3 @@
+sudo: true
 script:
  - uname -r
