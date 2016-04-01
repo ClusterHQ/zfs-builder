@@ -1,8 +1,6 @@
 # building zfs for boot2docker
 FROM ubuntu:16.04
 
-ENV UPDATE 1
-
 RUN apt-get update && apt-get -y install \
                         xz-utils \
                         curl \
@@ -26,10 +24,12 @@ RUN curl --retry 10 https://www.kernel.org/pub/linux/kernel/v${KERNEL_VERSION%%.
 RUN apt-get -y install shtool
 RUN apt-get -y install libtool
 RUN apt-get -y install build-essential gawk alien fakeroot zlib1g-dev uuid-dev libblkid-dev libselinux-dev parted lsscsi wget
-ADD build_zfs.sh /
-
 RUN cd /linux-kernel && \
     make defconfig && \
     echo 'CONFIG_ZLIB_INFLATE=y' >> /linux-kernel/.config && \
     echo 'CONFIG_CRYPTO_DEFLATE=y' >> /linux-kernel/.config && \
     make -j8
+
+ENV UPDATE 3
+
+ADD build_zfs.sh /

@@ -1,10 +1,6 @@
 #!/bin/bash
 #
 # ZFS builder for boot2docker
-#
-# Needs kernel config
-# SPL=y
-# ZFS=y
 
 set -xe
 
@@ -76,4 +72,4 @@ make install DESTDIR=/rootfs
 echo "Got after make install $?"
 
 cd /rootfs
-tar cfv zfs-$KERNEL_VERSION.tar.gz lib
+tar cfv zfs-${UNAME_R}.tar.gz lib
