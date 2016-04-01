@@ -1,5 +1,6 @@
 #!/bin/bash
 function build {
+    echo Building $1 $2
     KERNEL=$1
     UNAME_R=$2
     docker build --build-arg KERNEL_VERSION=$KERNEL -t clusterhq/build-zfs-boot2docker:${UNAME_R} -f Dockerfile.boot2docker .
@@ -7,7 +8,7 @@ function build {
 }
 
 # travis precise, probably an ubuntu kernel
-build 3.13.0 3.13.0-63-generic
+build 3.13 3.13.0-63-generic
 
 # boot2docker
 # look up docker version -> kernel mapping here:

@@ -30,6 +30,4 @@ RUN cd /linux-kernel && \
     echo 'CONFIG_CRYPTO_DEFLATE=y' >> /linux-kernel/.config && \
     make -j8
 
-ENV UPDATE 3
-
 ADD build_zfs.sh /
