@@ -1,3 +1,4 @@
 sudo: true
 script:
  - uname -r
+ - cat /etc/lsb-release
