@@ -1,7 +1,5 @@
 gmail_smtp_username: email
 gmail_smtp_password: password
-github_username: username
-github_password: password
 email_from: email
 email_to: email
 operating_system: coreos # used to determine folder to upload to, use 'generic' when building for zfs-in-container

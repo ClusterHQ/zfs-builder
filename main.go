@@ -21,13 +21,13 @@ const BASE_DIR string = "."
 const REPO_NAME string = "zfs-binaries"
 
 // permit offline operation, for testing
+/*
 const FAKE_NETWORK_SERVICES bool = true
 const DESTINATION_GIT_URL string = "/tmp/repo"
+*/
 
-/*
 const FAKE_NETWORK_SERVICES bool = false
 const DESTINATION_GIT_URL string = "git@github.com:clusterhq/zfs-binaries"
-*/
 
 func main() {
 	settings := getSettings()
@@ -111,17 +111,23 @@ func checkReleaseExists(operatingSystem string, channel string, kernel string) (
 }
 
 func getBuildEnv() (string, string) {
-	kernelVersion, err := exec.Command("uname", "-r").Output()
-	kernelVersion = []byte(strings.TrimSpace(string(kernelVersion)))
-	if err != nil {
-		log.Fatal(err)
+	kernelVersionOverride := os.Getenv("UNAME_R")
+	var kernelVersion string
+	if len(kernelVersionOverride) > 0 {
+		kernelVersion = kernelVersionOverride
+	} else {
+		kernelVersionOutput, err := exec.Command("uname", "-r").Output()
+		if err != nil {
+			log.Fatal(err)
+		}
+		kernelVersion = strings.TrimSpace(string(kernelVersionOutput))
 	}
 	updateFile, err := ioutil.ReadFile("/etc/coreos/update.conf")
 	if err != nil {
-		return string(kernelVersion), ""
+		return kernelVersion, ""
 	}
 	coreOsChannel := strings.Split(strings.Split(string(updateFile), "\n")[0], "=")[1]
-	return string(kernelVersion), coreOsChannel
+	return kernelVersion, coreOsChannel
 }
 
 func runBuild() ([]byte, error) {
