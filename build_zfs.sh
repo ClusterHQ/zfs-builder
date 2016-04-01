@@ -72,3 +72,7 @@ cd /zfs/zfs
 
 make -j8
 make install DESTDIR=/rootfs
+
+cd /rootfs
+tar cfv zfs-$KERNEL_VERSION.tar.gz lib
+
