@@ -4,7 +4,7 @@ function build {
     UNAME_R=$2
     docker build --build-arg KERNEL_VERSION=$KERNEL -t clusterhq/build-zfs-boot2docker:${UNAME_R} -f Dockerfile.boot2docker .
     # TODO make the container output the binaries somewhere...
-    ./zfs-builder docker run -e UNAME_R=$UNAME_R -v ${PWD}/rootfs:/rootfs clusterhq/build-zfs-boot3docker:${UNAME_R} /build_zfs.sh
+    ./zfs-builder docker run -e UNAME_R=$UNAME_R -v ${PWD}/rootfs:/rootfs clusterhq/build-zfs-boot2docker:${UNAME_R} /build_zfs.sh
 }
 
 # look up docker version -> kernel mapping here:
