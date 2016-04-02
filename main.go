@@ -26,7 +26,7 @@ const FAKE_NETWORK_SERVICES bool = true
 const DESTINATION_GIT_URL string = "/tmp/repo"
 */
 
-const FAKE_NETWORK_SERVICES bool = false
+const FAKE_NETWORK_SERVICES bool = true
 const DESTINATION_GIT_URL string = "git@github.com:clusterhq/zfs-binaries"
 
 func main() {

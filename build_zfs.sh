@@ -4,6 +4,9 @@
 
 set -xe
 
+cd /rootfs
+rm -rf *
+
 git clone https://github.com/zfsonlinux/spl.git /zfs/spl
 cd /zfs/spl
 git checkout spl-0.6.5.4
@@ -24,17 +27,6 @@ cd /zfs/spl
     --with-linux-obj=/linux-kernel \
     --with-config=kernel
 
-# Configure and cross-compile SPL usermode utils
-#./configure \
-#    --prefix=/ \
-#    --libdir=/lib \
-#    --includedir=/usr/include \
-#    --datarootdir=/usr/share \
-#    --with-linux=/linux-kernel \
-#    --with-linux-obj=/linux-kernel \
-#    --with-config=user \
-#    --build=x86_64-pc-linux-gnu \
-#    --host=x86_64-pc-linux-gnu
 make -j8
 make install DESTDIR=/rootfs
 
@@ -52,24 +44,10 @@ cd /zfs/zfs
     --with-spl-obj=/zfs/spl \
     --with-config=kernel
 
-# Configure and cross-compile ZFS usermode utils
-#./configure \
-#    --prefix=/ \
-#    --libdir=/lib \
-#    --includedir=/usr/include \
-#    --datarootdir=/usr/share \
-#    --with-linux=/linux-kernel \
-#    --with-linux-obj=/linux-kernel \
-#    --with-spl=/zfs/spl \
-#    --with-spl-obj=/zfs/spl \
-#    --with-config=user \
-#    --build=x86_64-pc-linux-gnu \
-#    --host=x86_64-pc-linux-gnu
-
 make -j8
 echo "Got after make $?"
 make install DESTDIR=/rootfs
 echo "Got after make install $?"
 
-cd /rootfs
-tar cfv zfs-${UNAME_R}.tar.gz lib
+cd /rootfs/lib/modules/*
+tar cfv /rootfs/zfs-${UNAME_R}.tar.gz .
