@@ -1,12 +1,11 @@
 #!/bin/bash
-set -xe
+
 function build {
     echo Building $1 $2 $3
     KERNEL=$1
     UNAME_R=$2
     DOCKERFILE=$3
-    docker build --build-arg KERNEL_VERSION=$KERNEL -t clusterhq/build-zfs-$DOCKERFILE:${UNAME_R} -f Dockerfile.$DOCKERFILE .
-    UNAME_R=$UNAME_R ./zfs-builder sh -c "docker run -e UNAME_R=$UNAME_R -v ${PWD}/rootfs:/rootfs clusterhq/build-zfs-$DOCKERFILE:${UNAME_R} /build_zfs.sh && cp rootfs/zfs-${UNAME_R}.tar.gz ."
+    UNAME_R=$UNAME_R ./zfs-builder sh -c "docker build --build-arg KERNEL_VERSION=$KERNEL -t clusterhq/build-zfs-$DOCKERFILE:${UNAME_R} -f Dockerfile.$DOCKERFILE . && docker run -e UNAME_R=$UNAME_R -v ${PWD}/rootfs:/rootfs clusterhq/build-zfs-$DOCKERFILE:${UNAME_R} /build_zfs.sh && cp rootfs/zfs-${UNAME_R}.tar.gz ."
 }
 
 # boot2docker
