@@ -1,4 +1,5 @@
 #!/bin/bash
+set -xe
 function build {
     echo Building $1 $2 $3
     KERNEL=$1
