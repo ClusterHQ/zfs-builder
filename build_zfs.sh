@@ -49,5 +49,5 @@ echo "Got after make $?"
 make install DESTDIR=/rootfs
 echo "Got after make install $?"
 
-cd /rootfs/lib/modules/*
-tar cfv /rootfs/zfs-${UNAME_R}.tar.gz .
+cd /rootfs/
+tar cfv /rootfs/zfs-${UNAME_R}.tar.gz lib

@@ -18,7 +18,8 @@ RUN apt-get update && apt-get -y install \
 
 # https://www.kernel.org/
 ARG KERNEL_VERSION
-# like "-boot2docker", ends up in module name
+# like "-boot2docker", ends up in module magic and must match running
+# kernel for modules to be loadable
 ARG LOCALVERSION
 
 # Fetch the kernel sources
@@ -29,7 +30,7 @@ RUN apt-get -y install shtool
 RUN apt-get -y install libtool
 RUN apt-get -y install build-essential gawk alien fakeroot zlib1g-dev uuid-dev libblkid-dev libselinux-dev parted lsscsi wget
 
-ADD kernel_config /linux-kernel/.config
+ADD kernel_config.boot2docker /linux-kernel/.config
 
 RUN cd /linux-kernel && \
     make -j8
