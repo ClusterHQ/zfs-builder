@@ -20,8 +20,10 @@ build 4.1.17 4.1.17-boot2docker boot2docker
 build 4.1.13 4.1.13-boot2docker boot2docker
 build 4.1.12 4.1.12-boot2docker boot2docker
 
-build 4.0.10 4.0.10-boot2docker boot2docker
-build 4.0.9 4.0.9-boot2docker boot2docker
+# XXX fails
+#build 4.0.10 4.0.10-boot2docker boot2docker
+# XXX fails
+#build 4.0.9 4.0.9-boot2docker boot2docker
 
 # travis trusty XXX TODO create Dockerfile.ubuntu-trusty and
 # kernel_config.ububtu-trusty
